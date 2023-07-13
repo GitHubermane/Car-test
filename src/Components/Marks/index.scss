@@ -1,0 +1,23 @@
+.mark {
+    margin: 0 10px 5px 0;
+    display: flex;
+    font-size: 13px;
+    &__name {
+        color: #353bec;
+        cursor: pointer;
+    }
+    &__count {
+        font-size: 12px;
+        margin-left: 5px;
+    }
+}
+
+.marks {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 500px;
+}
+
+.selected {
+    font-weight: 600;
+}
