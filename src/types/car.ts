@@ -1,3 +1,8 @@
+export type CarsDataType = {
+    cars: CarType[],
+    count: number
+}
+
 export type CarType = {
     _id: string
     mark: string
