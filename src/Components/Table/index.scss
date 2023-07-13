@@ -1,0 +1,29 @@
+.table {
+    font-size: 14px;
+    &__header {
+        padding: 12px 0;
+        background-color: #fafafa;
+        border-bottom: 1px solid #ccc;
+        & div {
+            border-left: 1px solid #ccc;
+            font-weight: 600;
+            &:first-of-type {
+                border-left: none;
+            }
+        }
+    }
+
+    &__header,
+    &__row {
+        display: grid;
+        grid-template-columns: 25% 15% 15% 15% 15% 15%;
+        & div {
+            padding-left: 10px;
+        }
+    }
+
+    &__row {
+        padding: 7px 0; 
+        border-bottom: 1px solid #ccc;
+    }
+}
