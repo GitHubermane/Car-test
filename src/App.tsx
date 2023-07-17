@@ -1,26 +1,42 @@
 import './index.scss';
 import { useEffect, useState } from "react";
 import { Marks } from "./Components/Marks";
-// import { Table } from "./Components/Table";
-import { MySelect } from './Components/Select';
+import { MySelect } from "./Components/Select";
 import { MyPagination } from './Components/Pagination';
 import { getCars } from "./api/getCars";
 import { getMarks } from "./api/getMarks";
 import { CarsDataType } from "./types/car";
 import { MarkType } from "./types/mark";
 import { MyTable } from './Components/Tabl';
-
+//@ts-ignore
+import spinner from "./img/spinner.gif"
 
 function App() {
-
+  // Не был уверен, можно ли было использовать redux
+  // поэтому использовал локальный стейт
   const [carsData, setCarsData] = useState<CarsDataType>({} as CarsDataType)
+  // Список всех марок
   const [marks, setMarks] = useState<MarkType[]>()
-  const [models, setModels] = useState<string[]>()
+  // Выбранная марка
   const [selectedMark, setSelectedMark] = useState('')
+  // Список моделей которые будут в select'e
+  const [models, setModels] = useState<string[]>()
+  // Список выбранных моделей
+  const [selectedModels, setSelectedModels] = useState<string[]>()
+  const [loading, setLoading] = useState(false)
 
   const getCarsData = async () => {
-    const data = await getCars(20, 0)
+    setLoading(true)
+    let data 
+    if (selectedModels) {
+      data = await getCars(20, 0, selectedMark, selectedModels?.join(','))
+    } else if (selectedMark){
+      data = await getCars(20, 0, selectedMark)
+    } else {
+      data = await getCars(20, 0)
+    }
     setCarsData(data)
+    setLoading(false)
   }
 
   const getMarksData = async () => {
@@ -30,7 +46,7 @@ function App() {
 
   useEffect(() => {
     getCarsData()
-  }, [])
+  }, [selectedMark, selectedModels])
 
   useEffect(() => {
     getMarksData()
@@ -42,8 +58,9 @@ function App() {
         marks={marks!}
         selectedMark={selectedMark}
         setSelectedMark={setSelectedMark}
+        setSelectedModels={setSelectedModels}
+        setLoading={setLoading}
         setModels={setModels}
-        setCarsData={setCarsData}
       />
 
       <div>Модель:</div>
@@ -51,19 +68,28 @@ function App() {
       <div className='select__wrapper'>
         <MySelect
           models={models!}
-          selectedMark={selectedMark}
-          setCarsData={setCarsData}
+          selectedModels={selectedModels!}
+          setSelectedModels={setSelectedModels}
+          setLoading={setLoading}
         />
       </div>
 
-      <MyTable dataSource={carsData.cars} />
+      {
+        loading
+          ? <img
+            className="spinner"
+            src={spinner}
+          />
+          : <MyTable dataSource={carsData.cars} />
+      }
 
 
       <div className='pagination__wrapper'>
         <MyPagination
           selectedMark={selectedMark}
-          models={models!}
+          selectedModels={selectedModels!}
           count={carsData.count}
+          setLoading={setLoading}
           setCarsData={setCarsData}
         />
       </div>

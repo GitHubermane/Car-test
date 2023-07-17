@@ -1,20 +1,22 @@
 import { Select } from "antd"
 import { CarsDataType } from "../../types/car"
-import { getCars } from "../../api/getCars"
 import { OptionsType } from "../../types/options"
+import { useEffect } from "react"
 
 
 type Props = {
     models: string[]
-    setCarsData: (data: CarsDataType) => void
-    selectedMark: string
+    selectedModels: string[]
+    setSelectedModels: (model: string[]) => void
+    setLoading: (bool: boolean) => void
 }
 
 export const MySelect = (props: Props) => {
     const {
         models,
-        selectedMark,
-        setCarsData
+        setLoading,
+        setSelectedModels,
+         selectedModels
     } = props
 
     const options: OptionsType[] = []
@@ -23,13 +25,20 @@ export const MySelect = (props: Props) => {
             options.push({ label: model, value: model })
         }
     }
-    const onHandleChange = async (val: string) => {
-        const data = await getCars(20, 0, selectedMark, val)
-        setCarsData(data)
+
+
+    const onHandleChange = (val: string[]) => {
+        setLoading(true)
+        // Если значение присутствует в Select, то удаляем
+        // выбранных моделей
+        setSelectedModels(val)
+        setLoading(false)
     }
 
     return (
         <Select
+            value={[...selectedModels]}
+            placeholder="Выберите модель"
             mode="multiple"
             style={{ minWidth: '100px' }}
             options={options}

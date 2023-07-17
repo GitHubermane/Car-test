@@ -1,17 +1,14 @@
-import { CarsDataType } from "../../types/car"
+import { getModels } from "../../api/getModels"
 import { MarkType } from "../../types/mark"
-import { ModelType } from "../../types/model"
-import { OptionsType } from "../../types/options"
-import { Mark } from "./Mark"
 import "./index.scss"
-import { useState } from "react"
 
 type Props = {
     marks: MarkType[]
     selectedMark: string
     setSelectedMark: (name: string) => void
+    setSelectedModels: (opts: string[]) => void
     setModels: (opts: string[]) => void
-    setCarsData: (data: CarsDataType) => void
+    setLoading: (bool: boolean) => void
 }
 
 export const Marks = (props: Props) => {
@@ -19,22 +16,48 @@ export const Marks = (props: Props) => {
         marks,
         selectedMark,
         setModels,
-        setCarsData,
         setSelectedMark,
+        setSelectedModels,
+        setLoading,
     } = props
+
+    const brandClassName = (id: string) => {
+        return selectedMark === id
+            ? 'mark__name selected'
+            : 'mark__name'
+    }
+
+    const onMarkClick = async (name: string) => {
+        setLoading(true)
+        const models = await getModels(name)
+        // Преобразуем массив объектов в массив строк 
+        let modelsArray: string[] = []
+        for (let model of models) {
+            modelsArray.push(model._id)
+        }
+
+        setModels(modelsArray)
+        setSelectedMark(name)
+        // Очищаем список выбранных моделей
+        setSelectedModels([])
+        setLoading(false)
+    }
+
     return (
         <div className="marks">
             {
                 marks?.map(mark => (
-                    <Mark
-                        key={mark?._id}
-                        name={mark?._id}
-                        count={mark?.count}
-                        setSelectedMark={setSelectedMark}
-                        selected={selectedMark === mark?._id}
-                        setModels={setModels}
-                        setCarsData={setCarsData}
-                    />
+                    <div className='mark'>
+                        <div
+                            className={brandClassName(mark._id)}
+                            onClick={() => onMarkClick(mark._id)}
+                        >
+                            {mark?._id}
+                        </div>
+                        <div className='mark__count'>
+                            {mark?.count}
+                        </div>
+                    </div>
                 ))
             }
         </div>

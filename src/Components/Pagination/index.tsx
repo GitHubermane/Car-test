@@ -5,27 +5,33 @@ import { CarsDataType } from "../../types/car"
 type Props = {
     count: number
     selectedMark: string
-    models: string[]
+    selectedModels: string[]
     setCarsData: (data: CarsDataType) => void
+    setLoading: (bool: boolean) => void
 }
 
 export const MyPagination = (props: Props) => {
     const {
         count,
         selectedMark,
-        models,
+        selectedModels,
         setCarsData,
+        setLoading
     } = props
-
-    const strModels = models?.toString()
+    // Преобразуем массив в троку
+    const strModels = selectedModels?.join(',')
     const onHandleChange = async (val: number) => {
-        const data = await getCars(20, val * 20, selectedMark, strModels)
+        setLoading(true)
+        const data = await getCars(20, (val - 1) * 20, selectedMark, strModels)
 
         setCarsData(data)
+        setLoading(false)
     }
 
     return (
         <Pagination
+            defaultCurrent={1}
+            pageSize={20}
             showSizeChanger={false}
             onChange={onHandleChange}
             total={count}

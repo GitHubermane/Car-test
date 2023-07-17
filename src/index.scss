@@ -1,8 +1,15 @@
 .App {
+    display: flex;
+    flex-direction: column;
     font-family: sans-serif;
     padding: 20px 30px;
 }
-
+.spinner {
+    justify-self: center;
+    align-self: center;
+    height: 60px;
+    width: 60px;
+}
 .select {
     &__wrapper {
         padding: 10px 0;
@@ -12,6 +19,6 @@
 .pagination {
     &__wrapper {
         padding: 15px 0;
-        float: right;
+        align-self: end;
     }
 }
