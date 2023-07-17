@@ -47,7 +47,10 @@ export const Marks = (props: Props) => {
         <div className="marks">
             {
                 marks?.map(mark => (
-                    <div className='mark'>
+                    <div
+                        className='mark'
+                        key={mark._id}
+                    >
                         <div
                             className={brandClassName(mark._id)}
                             onClick={() => onMarkClick(mark._id)}

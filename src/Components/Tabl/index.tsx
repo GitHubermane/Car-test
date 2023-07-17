@@ -94,6 +94,7 @@ export const MyTable = ({ dataSource }: Props) => {
     const cars = dataSource?.map(car => {
         return {
             id: car._id,
+            key: car._id,
             model: `${car.mark} ${car.model ? car.model : ''}`,
             modification: getModification(car),
             equipment: car.equipmentName,

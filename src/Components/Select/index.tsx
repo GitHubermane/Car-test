@@ -37,7 +37,7 @@ export const MySelect = (props: Props) => {
 
     return (
         <Select
-            value={[...selectedModels]}
+            value={selectedModels ? [...selectedModels]: []}
             placeholder="Выберите модель"
             mode="multiple"
             style={{ minWidth: '100px' }}
